@@ -24,7 +24,7 @@ class UserService(private val database: Database) {
         }
     }
 
-    suspend fun <T> dbQuery(block: suspend () -> T): T =
+    private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }
 
     suspend fun create(user: ExposedUser): Int = dbQuery {
