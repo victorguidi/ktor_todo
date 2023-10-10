@@ -17,6 +17,8 @@ fun Application.configureDatabases() {
         )
 
     val userService = UserService(database)
+    val todoService = TodosService(database)
+
     routing {
         // Create user
         post("/users") {
@@ -45,6 +47,39 @@ fun Application.configureDatabases() {
         delete("/users/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             userService.delete(id)
+            call.respond(HttpStatusCode.OK)
+        }
+
+        // Create a todo
+        post("/todo") {
+            val todo = call.receive<ExposedTodos>()
+            val id = todoService.create(todo)
+            call.respond(HttpStatusCode.Created, id)
+        }
+
+        // Get a todo
+        get("/todo/{id}") {
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+            val todo = todoService.read(id)
+            if (todo != null) {
+                call.respond(HttpStatusCode.OK, todo)
+            } else {
+                call.respond(HttpStatusCode.NotFound)
+            }
+        }
+
+        // Update todo
+        put("/todo/{id}") {
+            val id  = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+            val todo = call.receive<ExposedTodos>()
+            todoService.update(id, todo)
+            call.respond(HttpStatusCode.OK)
+        }
+
+        // Delete todo
+        delete("/todo/{id}") {
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+            todoService.delete(id)
             call.respond(HttpStatusCode.OK)
         }
     }
