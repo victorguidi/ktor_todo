@@ -51,11 +51,11 @@ fun Application.configureDatabases() {
         }
 
         // Create a todo
-        post("/todo") {
-            val todo = call.receive<ExposedTodos>()
-            val id = todoService.create(todo)
-            call.respond(HttpStatusCode.Created, id)
-        }
+//        post("/todo") {
+//            val todo = call.receive<ExposedTodos>()
+//            val id = todoService.create(todo)
+//            call.respond(HttpStatusCode.Created, id)
+//        }
 
         // Get a todo
         get("/todo/{id}") {
